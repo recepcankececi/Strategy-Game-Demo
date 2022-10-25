@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Unit : MonoBehaviour
+public class Engineer : Unit
 {
-    public Sprite unitImage;
+    
 }

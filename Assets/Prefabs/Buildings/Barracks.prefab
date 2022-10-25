@@ -379,3 +379,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32f567cc5710fb54dafcf0c9cbb62142, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buildingName: Barracks
+  buildingImage: {fileID: 21300000, guid: 2fb00d559b2c25340aba640c4a686a17, type: 3}
+  producibleUnits:
+  - {fileID: 1665648570547457642, guid: 005c17f0be07c4f40a802948f6eb0390, type: 3}
