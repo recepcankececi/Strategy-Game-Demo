@@ -16,11 +16,13 @@ public class UnitMovementController : MonoBehaviour, IControllable
 
     public void MoveToTarget(Vector3 targetPosition)
     {
+        //Sets new destination to a unit on a* pathfinding
         aiPath.destination = targetPosition;
     }
 
     public void Selected(bool selected)
     {
+        //Triggers visual feedback for selected units
         selectedImage.SetActive(selected);
     }
 }

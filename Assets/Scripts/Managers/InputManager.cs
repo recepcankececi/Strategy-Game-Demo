@@ -25,6 +25,8 @@ public class InputManager : MonoSingleton<InputManager>
     private void Update()
     {
         BoxSelection();
+        
+        //Trigger an event when left clicked on a empty space or right click
         if (Input.GetMouseButtonDown(0) && !CheckForUiElement())
         {
             onLeftClick?.Invoke();
@@ -62,7 +64,8 @@ public class InputManager : MonoSingleton<InputManager>
 
     private void BoxSelection()
     {
-        if (Input.GetMouseButtonDown(0))
+        //Create a rectangular box for selecting multiple units
+        if (Input.GetMouseButtonDown(0) && !CheckForUiElement())
         {
             startPosition = GetMouseWorldPosition();
             selectionArea.gameObject.SetActive(true);
@@ -70,6 +73,7 @@ public class InputManager : MonoSingleton<InputManager>
 
         if (Input.GetMouseButton(0))
         {
+            //Set lower left and upper right corners of the rectangular while cursor is moving
             Vector3 currentMousePosition = GetMouseWorldPosition();
             
             Vector3 lowerLeft = new Vector3(Mathf.Min(startPosition.x, currentMousePosition.x),
@@ -83,6 +87,7 @@ public class InputManager : MonoSingleton<InputManager>
 
         if (Input.GetMouseButtonUp(0))
         {
+            //When selection is done all controllable objects put in a list and ready for command
             selectionArea.gameObject.SetActive(false);
 
             Collider2D[] collider2DArray = Physics2D.OverlapAreaAll(startPosition, GetMouseWorldPosition());
@@ -104,10 +109,12 @@ public class InputManager : MonoSingleton<InputManager>
                     controllable.Selected(true);
                 }
             }
+            if(selectedUnits.Count > 0) AudioManager.Instance.PlaySelectSound();
         }
 
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1) && selectedUnits.Count > 0)
         {
+            //When right clicked all the selected units is moving to clicked position with A* pathfinding movetotarget method.
             List<Vector3> targetPositionList = GetPositionListAround(GetMouseWorldPosition(), 1f, selectedUnits.Count);
             int targetPositionIndex = 0;
             
@@ -116,11 +123,13 @@ public class InputManager : MonoSingleton<InputManager>
                 item.MoveToTarget(targetPositionList[targetPositionIndex]);
                 targetPositionIndex = (targetPositionIndex + 1) % targetPositionList.Count;
             }
+            AudioManager.Instance.PlayCommandSound();
         }
     }
 
     public Vector3 GetMouseWorldPosition()
     {
+        //Returns world position of the mouse
         var worldPosition = mainCam.ScreenToWorldPoint(Input.mousePosition);
         worldPosition.z = 0;
         return worldPosition;
@@ -128,6 +137,7 @@ public class InputManager : MonoSingleton<InputManager>
 
     private List<Vector3> GetPositionListAround(Vector3 originPosition, float distance, int count)
     {
+        //Creates multiple different position for units for destination and simulates a more natural move pattern
         List<Vector3> positionList = new List<Vector3>();
 
         for (int i = 0; i < count; i++)
