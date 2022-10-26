@@ -8,9 +8,11 @@ public class BuildingBase : MonoBehaviour
 {
     [SerializeField] private string buildingName;
     [SerializeField] private Sprite buildingImage;
+    [SerializeField] protected GameObject targetFlag;
     [SerializeField] private List<GameObject> producibleUnits;
     
     private InformationPanelUpdater informationPanelUpdater;
+    protected bool buildingSelected;
 
     public delegate void ProduceUnit(GameObject unitToProduce);
 
@@ -21,16 +23,22 @@ public class BuildingBase : MonoBehaviour
         AstarPath.active.Scan();
         informationPanelUpdater = FindObjectOfType<InformationPanelUpdater>();
         produceUnit = ProduceUnitMethod;
-    }
+    } 
 
-    protected void OnMouseDown()
+    protected void OnMouseUp()
     {
         informationPanelUpdater.UpdateInformationPanel(buildingName, buildingImage, producibleUnits, produceUnit);
+        buildingSelected = true;
+        if (targetFlag)
+        {
+            print("seçildi");
+            targetFlag.SetActive(true);
+        }
     }
     
-    private void ProduceUnitMethod(GameObject unittoproduce)
+    protected virtual void ProduceUnitMethod(GameObject unitToProduce)
     {
-        
+        GameObject unit = Instantiate(unitToProduce);
     }
 
 }

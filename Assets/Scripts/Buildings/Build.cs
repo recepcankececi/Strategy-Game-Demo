@@ -43,7 +43,7 @@ public class Build : MonoBehaviour
     private void CompleteBuild()
     {
         Instantiate(buildingPrefab, transform.position, quaternion.identity);
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 
     private void QuitBuilding()

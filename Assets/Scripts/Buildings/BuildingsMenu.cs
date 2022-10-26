@@ -9,6 +9,7 @@ public class BuildingsMenu : MonoSingleton<BuildingsMenu>
 
     public void CreateBlueprint(int index)
     {
-        Instantiate(buildingBlueprints[index]);
+        buildingBlueprints[index].transform.position = InputManager.Instance.GetMouseWorldPosition();
+        buildingBlueprints[index].SetActive(true);
     }
 }

@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class InputManager : MonoSingleton<InputManager>
 {
@@ -9,6 +12,9 @@ public class InputManager : MonoSingleton<InputManager>
     private List<IControllable> selectedUnits;
     private Vector3 startPosition;
     private Camera mainCam;
+    
+    public UnityAction onLeftClick;
+    public UnityAction onRightClick;
     
     private void Awake()
     {
@@ -19,6 +25,39 @@ public class InputManager : MonoSingleton<InputManager>
     private void Update()
     {
         BoxSelection();
+        if (Input.GetMouseButtonDown(0) && !CheckForUiElement())
+        {
+            onLeftClick?.Invoke();
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            onRightClick?.Invoke();
+        }
+    }
+
+    private bool CheckForUiElement()
+    {
+        //Set up the new Pointer Event
+        PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
+        //Set the Pointer Event Position to that of the game object
+        pointerEventData.position = Input.mousePosition;
+ 
+        //Create a list of Raycast Results
+        List<RaycastResult> results = new List<RaycastResult>();
+ 
+        //Raycast using the Graphics Raycaster and mouse click position
+        GraphicRaycaster raycaster = FindObjectOfType<GraphicRaycaster>();
+        raycaster.Raycast(pointerEventData, results);
+        
+        foreach (var item in results)
+        {
+            if (item.gameObject.layer == 5)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void BoxSelection()

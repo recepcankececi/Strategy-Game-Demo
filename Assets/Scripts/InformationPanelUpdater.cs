@@ -32,6 +32,7 @@ public class InformationPanelUpdater : MonoBehaviour
         foreach (var item in producibleUnits)
         {
             GameObject go = new GameObject();
+            go.layer = 5;
             go.transform.parent = scrollContent.transform;
             go.transform.localScale = Vector3.one;
             go.AddComponent<Image>().sprite = item.GetComponent<Unit>().unitImage;
